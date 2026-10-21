@@ -1,0 +1,251 @@
+/* Login local pentru GitHub Pages: barieră de interfață, nu autorizare pe server.
+   Parolele nu sunt incluse în clar. Verificatorii publici pot fi testați offline. */
+(function (global) {
+  'use strict';
+  var ACCOUNTS = {
+  "user01": {
+    "salt": "0d6d32092382dc993e0332b143ffc410",
+    "hash": "d54433aaf7ab2a79383001c2d1a5a57a7682edfe6137265cee4a0d99de478797"
+  },
+  "user02": {
+    "salt": "0cd39fdb8351775593aaacc2c386f62f",
+    "hash": "ba80364cefec777f560f1850f101e26608f87d4551409fb08ddae812393556bc"
+  },
+  "user03": {
+    "salt": "3929f1f8626f94252a40d9c1eaf3b7d8",
+    "hash": "015cbf274f86d3af77837ec2ef3228ab76ecc5c08ee2f2d0b08c544952deaa95"
+  },
+  "user04": {
+    "salt": "0662f0567573018a53716b0a076a4cc6",
+    "hash": "58e02ba9c6da73a275538d9a34e605ba962b38869222cf01f4e13082375563c4"
+  },
+  "user05": {
+    "salt": "d3f92064a6b6a4084fd6adbc634be161",
+    "hash": "5bf6d86498c18c08323c82c896315ee55b26a87afafe562b0b799e06c6f563d8"
+  },
+  "user06": {
+    "salt": "7c354f15da902b758636104de3465ef1",
+    "hash": "2561729109a7b997da4af15e7df1a50cdee3d1b0415e4b091cc3b493a071ec66"
+  },
+  "user07": {
+    "salt": "1346752c62c934d182d2ba72f970acf7",
+    "hash": "11357978bfabc597e5aaa41611eee4fa7088492af164192b5a08c2dc7e89c6f7"
+  },
+  "user08": {
+    "salt": "bef481ebb8f62e8059f94d7a87994ef8",
+    "hash": "64a313450e4334a332ad89deb7e37784875cf51245fefbce9759f5cdf1de032e"
+  },
+  "user09": {
+    "salt": "bfcd532a575902f99290c4dba367ec54",
+    "hash": "3b19af560c2bb9a6e9f92fcb27678106708144059fe253e0588691b515e90f38"
+  },
+  "user10": {
+    "salt": "0e54c0e0d0465dc03f3e03ca68e070d9",
+    "hash": "a09c14eac7ba5e97c25bc2579b905ab0e9544f6df30118a8a601f79cac5a5e84"
+  },
+  "user11": {
+    "salt": "53aeac0dc57083fff802114fef151f48",
+    "hash": "0dfd55e63c0267caade90704fa1c600f5c95c38c9a3c5fdcc6d1aaaf242e0f23"
+  },
+  "user12": {
+    "salt": "6e934c67bd7c2dd91c81fdd2ddb4c5bd",
+    "hash": "3495372603316716d991b2e6b30af5810e256162da5d81e37555ac6d2e0be5f3"
+  },
+  "user13": {
+    "salt": "aed910a987fe7221392a5a2f688b6fc3",
+    "hash": "a563167c73de6a431b5d311b804996e80671ae7fa03974edf4e3e1bce4319cb2"
+  },
+  "user14": {
+    "salt": "372b65f1660e9fcd11219a2fbc7563e5",
+    "hash": "e169eb8dd30e2da4f18f2554bce8122e67c6a30b3778288cedf543a01dee8bc4"
+  },
+  "user15": {
+    "salt": "d50f9026dd90ef3a6b828339152a88d8",
+    "hash": "4aeb6e3a14826959b983767057c3b7bb70eb4edf8891b3f0c04addfc154201c9"
+  },
+  "user16": {
+    "salt": "0825c46452cc22250bf047e72c95a65e",
+    "hash": "37d7423e120b6fb184f834ba42d9879fa0e4bc046c05ab32b29df4d1dffa20ae"
+  },
+  "user17": {
+    "salt": "ab04bde099f8d661c3583290a1a1a5c5",
+    "hash": "26ccf3993d20f8d3d9ac20f9048a25985a639709db4a5e428f4bf5d1d52c2b9b"
+  },
+  "user18": {
+    "salt": "c2bab6f3b95f872b8abc6af2e0a8590e",
+    "hash": "2178eaad773882e3b67a538ed6d7430d409124d49bfbd6accc712cb769f3cd61"
+  },
+  "user19": {
+    "salt": "dd297d1aa599509d4d2a26693e9e99f2",
+    "hash": "0a72755c61d8a9987067d4e61c5198d50da6b1b8f886498673fe9d02f09fb5d1"
+  },
+  "user20": {
+    "salt": "b6849216cf19caf8f3b198a9ac27e088",
+    "hash": "66ba764a081abcd51bc5c7d6a3c33ecd459d76d3348eb72013c395838a05e816"
+  },
+  "user21": {
+    "salt": "3e5103921da0a8c95daf159f1c3dc08c",
+    "hash": "85dbcaaf11948fb605990e1ee6930715a51cb7388fca7710e8423ac43636ff2e"
+  },
+  "user22": {
+    "salt": "a8101d33e0a48b2cca2a3844d55cd234",
+    "hash": "e606a3c04f7de8c5cdfdc3288dc8cf96c709ca38f1f04f1a9da4009694dadad8"
+  },
+  "user23": {
+    "salt": "a3dc1a3b256e0da12aa2f18aa941b946",
+    "hash": "7a32b137a378ab093c61b7a4feb70a5b531c1230ab860ba51eab8dfdfc52a868"
+  },
+  "user24": {
+    "salt": "13de019b5807fb4b00ac11069e53bb8f",
+    "hash": "5f9f3fe74c097878d495b8f21581f92a0f9ab765079f8d21b4862d58d1fa5151"
+  },
+  "user25": {
+    "salt": "c8a4680f7c1ef96fe03b3c71c61f67c6",
+    "hash": "fb68e702dae12e0431dfeed84c347d73b5a895c9fb7460546d25b780ed464ad3"
+  },
+  "user26": {
+    "salt": "1a8fdef2ab916a05f8c910fa1c46a418",
+    "hash": "3c9d7b86d7e952598f6c08d576b04b0f01afb20fff411d27dae825649cb73271"
+  },
+  "user27": {
+    "salt": "7cec6f5e981f2b81e792676d2e594a14",
+    "hash": "6ec24a1cc3fa287d07c5c4221fc7149896b4e7530755d7104bd003cc84a6b9c2"
+  },
+  "user28": {
+    "salt": "c8cf9ab01bfc517092389601532ead2c",
+    "hash": "07246d5a328bb120f3298c8ad86ef906d56155d95209cd31bf7eac8caa88f822"
+  },
+  "user29": {
+    "salt": "ed2a6189ba3f59e595ac51118129b12a",
+    "hash": "098061b0c1abd8a75422ee7ae7e13ea51c22ff24ef9df87d6cdad01c26d87a08"
+  },
+  "user30": {
+    "salt": "a44e8f4b98258802286923cc4f6bb7f1",
+    "hash": "e9ec6fd00734a33c39e45bcc9ad0a380b16f6e67033917518c9a877a01fccb33"
+  },
+  "teacher01": {
+    "salt": "9482ce95ee5e2266b35f4f9a50f3a2a5",
+    "hash": "ee23778bf2e16f876bb627dc0810be8353654e6685e4daa516254663e52fe2ba"
+  },
+  "teacher02": {
+    "salt": "dfceb547344459ad4a057ab826f9a7c5",
+    "hash": "cf25951593efa9b6fe90d7d19b0a43f20ff4177ffb83f34609818f875bcac30c"
+  },
+  "teacher03": {
+    "salt": "d4fe2ad987be5fda813c0fb4bb7e36d2",
+    "hash": "94f11c9fc773a488de78b1bd095420cc051df6810b62d79b66f74542d00d2ee0"
+  },
+  "teacher04": {
+    "salt": "49597153a57bc63c9f403ee2c070a274",
+    "hash": "782dce7b781976e97048d511e61991e6d21fd648da99d09b8c13dac99c4429b4"
+  },
+  "teacher05": {
+    "salt": "bc6509e0270dbcf656d0ff0389f4d7e6",
+    "hash": "af7fcaaf26f4c59ac9e9472bd10f471cb2af6f1858a46fe642ba9ab2d61fcb5b"
+  },
+  "admin": {
+    "salt": "a855b2d3f12cf2bb8e9076adc69ab546",
+    "hash": "381277f4cdbe859b001f6d2dbf8863cac344380ddadcde218baa7baebc8b39a0"
+  }
+};
+  var SESSION_KEY = 'forever-afterschool-escaperoom-session-v1';
+  var SESSION_MS = 8 * 60 * 60 * 1000;
+  var active = null;
+  var expiryTimer = null;
+
+  function known(username) {
+    return Object.prototype.hasOwnProperty.call(ACCOUNTS, username);
+  }
+  function valid(session) {
+    return session && known(session.username) && Number.isFinite(session.expiresAt) &&
+      session.expiresAt > Date.now() && session.expiresAt <= Date.now() + SESSION_MS;
+  }
+  function readSession() {
+    try {
+      var session = JSON.parse(sessionStorage.getItem(SESSION_KEY));
+      if (valid(session)) return session;
+      sessionStorage.removeItem(SESSION_KEY);
+    } catch (e) { /* Stocarea poate fi blocată; login-ul funcționează în memorie. */ }
+    return null;
+  }
+  function logout() {
+    active = null;
+    clearTimeout(expiryTimer);
+    try { sessionStorage.removeItem(SESSION_KEY); } catch (e) { /* mod privat */ }
+    // Reîncărcarea oprește cronometrele, sunetul și toate evenimentele jocului.
+    document.getElementById('app').hidden = true;
+    document.getElementById('account-bar').hidden = true;
+    document.getElementById('modal-layer').hidden = true;
+    global.location.reload();
+  }
+  async function verify(username, password) {
+    // Același calcul pentru un cont necunoscut: mesaj și durată similare.
+    var account = known(username) ? ACCOUNTS[username] : ACCOUNTS.user01;
+    var key = await global.crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
+    var bits = await global.crypto.subtle.deriveBits({
+      name: 'PBKDF2', salt: new TextEncoder().encode(account.salt), iterations: 210000, hash: 'SHA-256'
+    }, key, 256);
+    var hash = Array.from(new Uint8Array(bits)).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+    return known(username) && hash === account.hash;
+  }
+  function init(onLogin) {
+    var form = document.getElementById('login-form');
+    var username = document.getElementById('login-username');
+    var password = document.getElementById('login-password');
+    var error = document.getElementById('login-error');
+    var button = document.getElementById('btn-login');
+    var busy = false;
+    function enter(session) {
+      active = session;
+      onLogin(session.username);
+      password.value = '';
+      document.getElementById('account-username').textContent = session.username;
+      document.getElementById('login-wall').hidden = true;
+      document.getElementById('account-bar').hidden = false;
+      document.getElementById('app').hidden = false;
+      expiryTimer = setTimeout(logout, Math.max(0, session.expiresAt - Date.now()));
+      document.getElementById('btn-logout').focus();
+      global.scrollTo(0, 0);
+    }
+    document.getElementById('btn-logout').addEventListener('click', logout);
+    document.getElementById('login-show-password').addEventListener('change', function (event) {
+      password.type = event.target.checked ? 'text' : 'password';
+    });
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden && active && !valid(active)) logout();
+    });
+    global.addEventListener('pageshow', function () {
+      if (active && !valid(active)) logout();
+    });
+    form.addEventListener('submit', async function (event) {
+      event.preventDefault();
+      if (busy) return;
+      busy = true;
+      button.disabled = true;
+      button.textContent = 'Se verifică…';
+      error.textContent = '';
+      try {
+        var name = username.value.trim().toLowerCase();
+        if (!await verify(name, password.value)) {
+          error.textContent = 'Utilizator sau parolă incorectă. Încearcă din nou.';
+          password.value = '';
+          password.focus();
+          return;
+        }
+        var session = { username: name, expiresAt: Date.now() + SESSION_MS };
+        try { sessionStorage.setItem(SESSION_KEY, JSON.stringify(session)); } catch (e) { /* sesiune în memorie */ }
+        enter(session);
+      } catch (e) {
+        error.textContent = 'Autentificarea nu este disponibilă. Deschide jocul prin HTTPS sau localhost și reîncarcă pagina.';
+      } finally {
+        busy = false;
+        button.disabled = false;
+        button.textContent = 'Intră în aventură →';
+      }
+    });
+    var session = readSession();
+    if (session) enter(session);
+    else username.focus();
+  }
+  global.Auth = { init: init };
+})(window);
