@@ -2,6 +2,8 @@
    Parolele nu sunt incluse în clar. Verificatorii publici pot fi testați offline. */
 (function (global) {
   'use strict';
+  // Lista activă de conturi este accounts.json, administrată din pagina admin/.
+  // Lista de mai jos e doar rezerva pentru când fișierul nu se poate citi (de ex. file://).
   var ACCOUNTS = {
   "user01": {
     "salt": "0d6d32092382dc993e0332b143ffc410",
@@ -152,7 +154,19 @@
   var SESSION_MS = 8 * 60 * 60 * 1000;
   var active = null;
   var expiryTimer = null;
+  // Folosit pentru utilizatorii necunoscuți, ca verificarea să dureze la fel.
+  var NO_ACCOUNT = { salt: '00000000000000000000000000000000', hash: '' };
 
+  // Se citește la fiecare pornire, ca ștergerile și resetările din admin să ajungă pe toate dispozitivele.
+  function loadAccounts() {
+    return global.fetch('accounts.json?t=' + Date.now(), { cache: 'no-store' })
+      .then(function (response) {
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        return response.json();
+      })
+      .then(function (data) { if (data && data.users) ACCOUNTS = data.users; })
+      .catch(function () { /* Fără rețea sau deschis prin file://: rămâne lista de rezervă. */ });
+  }
   function known(username) {
     return Object.prototype.hasOwnProperty.call(ACCOUNTS, username);
   }
@@ -180,7 +194,7 @@
   }
   async function verify(username, password) {
     // Același calcul pentru un cont necunoscut: mesaj și durată similare.
-    var account = known(username) ? ACCOUNTS[username] : ACCOUNTS.user01;
+    var account = known(username) ? ACCOUNTS[username] : NO_ACCOUNT;
     var key = await global.crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
     var bits = await global.crypto.subtle.deriveBits({
       name: 'PBKDF2', salt: new TextEncoder().encode(account.salt), iterations: 210000, hash: 'SHA-256'
@@ -195,9 +209,11 @@
     var error = document.getElementById('login-error');
     var button = document.getElementById('btn-login');
     var busy = false;
+    var ready = loadAccounts();
     function enter(session) {
       active = session;
-      onLogin(session.username);
+      // reset = marcajul ultimei resetări de progres cerute din admin (sau nimic).
+      onLogin(session.username, ACCOUNTS[session.username].reset || '');
       password.value = '';
       document.getElementById('account-username').textContent = session.username;
       document.getElementById('login-wall').hidden = true;
@@ -225,6 +241,7 @@
       button.textContent = 'Se verifică…';
       error.textContent = '';
       try {
+        await ready;
         var name = username.value.trim().toLowerCase();
         if (!await verify(name, password.value)) {
           error.textContent = 'Utilizator sau parolă incorectă. Încearcă din nou.';
@@ -243,9 +260,11 @@
         button.textContent = 'Intră în aventură →';
       }
     });
-    var session = readSession();
-    if (session) enter(session);
-    else username.focus();
+    ready.then(function () {
+      var session = readSession();
+      if (session) enter(session);
+      else if (!form.contains(document.activeElement)) username.focus();
+    });
   }
   global.Auth = { init: init };
 })(window);

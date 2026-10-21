@@ -187,10 +187,18 @@
   var KEY = 'forever-afterschool-escaperoom-v1';
   var Store = {
     data: null,
-    useAccount: function (username) {
-      if (!/^(?:user(?:0[1-9]|[12][0-9]|30)|teacher0[1-5]|admin)$/.test(username)) throw new Error('Cont invalid.');
+    useAccount: function (username, reset) {
+      if (!/^[a-z0-9._-]{1,32}$/.test(username)) throw new Error('Cont invalid.');
       KEY = 'forever-afterschool-escaperoom-v1:' + username;
       this.data = null;
+      // Resetare cerută din pagina admin/: se aplică o singură dată pe fiecare dispozitiv.
+      var resetKey = 'forever-afterschool-escaperoom-reset-v1:' + username;
+      try {
+        if (reset && localStorage.getItem(resetKey) !== reset) {
+          localStorage.removeItem(KEY);
+          localStorage.setItem(resetKey, reset);
+        }
+      } catch (e) { /* mod privat */ }
     },
     defaults: function () {
       return { name: '', level: 2, size: 4, muted: false, avatar: '🙂', rooms: {}, mystery: { plays: 0, stars: 0 } };

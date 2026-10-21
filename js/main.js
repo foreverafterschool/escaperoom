@@ -12,8 +12,8 @@
       document.getElementById('login-error').textContent = 'Autentificarea nu s-a încărcat. Reîncarcă pagina.';
       return;
     }
-    window.Auth.init(function (username) {
-      window.U.Store.useAccount(username);
+    window.Auth.init(function (username, reset) {
+      window.U.Store.useAccount(username, reset);
       window.Game.boot();
     });
   }

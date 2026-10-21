@@ -183,6 +183,8 @@ apoi deschide `http://localhost:8123`.
 
 ```
 index.html          structura paginii și cele 5 ecrane
+accounts.json       lista de conturi (modificată din panoul admin)
+admin/index.html    panoul de administrare (/admin)
 .nojekyll           pentru GitHub Pages
 css/
   styles.css        tot designul, animațiile și varianta pentru telefon
@@ -258,13 +260,14 @@ user01–user30 (copii), teacher01–teacher05 (cadre didactice) și admin.
 Parolele sunt cele distribuite separat de administrator. Numele contului este normalizat
 la litere mici; parola este sensibilă la litere mari/mici și nu este ajustată.
 Etichetele de rol descriu destinatarii conturilor; toate conturile au același
-acces la joc, fără un panou sau privilegii administrative separate.
+acces la joc. Conturile se administrează din panoul `/admin` (vezi mai jos).
 
 Sesiunea se păstrează în sessionStorage, rezistă la reîncărcare și expiră după
 8 ore. Butonul **Deconectare** închide sesiunea și oprește jocul. Dacă stocarea
 sesiunii este blocată, accesul durează doar până la reîncărcarea paginii.
 Progresul se salvează local, separat pe cont, pe acest browser și dispozitiv;
-nu se sincronizează între dispozitive. Progresul vechi, fără cont, rămâne
+nu se sincronizează între dispozitive (doar resetările cerute din panoul admin
+ajung pe toate dispozitivele). Progresul vechi, fără cont, rămâne
 neatins și nu este atribuit automat niciunui utilizator. Sesiunile și progresul
 folosesc chei de stocare dedicate acestei instalări Forever Afterschool.
 
@@ -279,6 +282,39 @@ Pentru conținut privat este necesar un backend cu sesiuni și verificări pe se
 Verificarea parolelor folosește Web Crypto: recomandat HTTPS (GitHub Pages)
 sau un server local pe http://localhost:8123. Deschiderea prin file://
 depinde de suportul Web Crypto al browserului.
+
+### Panoul de administrare (`/admin`)
+
+Adresa: https://foreverafterschool.github.io/escaperoom/admin/
+
+Cu parola contului `admin`, panoul permite:
+
+- **adăugarea** unui cont (utilizator și parolă, cu buton care generează parola);
+- **ștergerea** unui cont: nu se mai poate intra cu el de pe niciun dispozitiv;
+- **resetarea progresului** unui cont: progresul se șterge pe toate dispozitivele.
+
+Nu există server sau bază de date. Lista de conturi stă în `accounts.json`, în
+repository. Panoul modifică fișierul prin API-ul GitHub (fiecare acțiune e un
+commit pe `main`), GitHub Pages îl republică în 1–2 minute, iar jocul îl citește
+la fiecare pornire. O resetare pune pe cont un marcaj `reset` (data resetării);
+când jocul vede un marcaj nou, șterge o singură dată progresul local al contului,
+pe fiecare dispozitiv. Un cont nou primește și el marcajul, ca să pornească de la
+zero chiar dacă numele a mai fost folosit. Modificările se aplică la următoarea
+deschidere sau reîncărcare a jocului.
+
+La prima intrare pe un dispozitiv, panoul cere și o **cheie de acces GitHub**
+(fine-grained personal access token), creată din contul `foreverafterschool`,
+doar pentru cele trei repository-uri ale jocurilor, cu permisiunea
+*Contents: Read and write*. Pașii sunt explicați în panou. Cheia rămâne doar în
+browserul acelui dispozitiv, e folosită de panourile tuturor celor trei jocuri
+și nu se pune niciodată în repository. Fără cheie nu se poate modifica nimic;
+parola admin doar împiedică folosirea panoului pe un dispozitiv unde cheia e deja
+salvată.
+
+Dacă `accounts.json` nu poate fi citit (de exemplu la deschiderea prin file://),
+jocul folosește lista inițială de conturi din `js/auth.js`, fără modificările
+din panou. Pentru dezvoltatori: panoul face commit-uri direct pe `main`, deci
+rulează `git pull` înainte de a lucra în repository.
 
 ### Verificarea loginului
 
