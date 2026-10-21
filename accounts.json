@@ -143,6 +143,11 @@
     "admin": {
       "salt": "a855b2d3f12cf2bb8e9076adc69ab546",
       "hash": "381277f4cdbe859b001f6d2dbf8863cac344380ddadcde218baa7baebc8b39a0"
+    },
+    "user31": {
+      "salt": "03f6d09935798027841d20f78e9c411b",
+      "hash": "d93c2cd32a784b94e1389e4ac56ef1158bd419c31d69d763db2622a554ed50a9",
+      "reset": "2026-10-21T11:11:23.591Z"
     }
   }
 }
